@@ -1,14 +1,17 @@
+import os
+
+from slackclient import SlackClient
+
 from google.cloud import firestore
 from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 from google.api_core.exceptions import NotFound
-import os
-from slackclient import SlackClient
+
 
 
 # -----------------------------------------
 # Individual bot actions
 # -----------------------------------------
-def add_keywords(mentor, keywords, db):
+def add_keywords(mentor, keywords, db, sc):
     db.collection('keyword')
 
     for keyword in keywords:
@@ -19,8 +22,17 @@ def add_keywords(mentor, keywords, db):
         except NotFound as e:
             entry.set({'mentors': [mentor]})
 
+    reply_text = "I've added keywords " + str(keywords) + " to you!"
 
-def remove_keywords(mentor, keywords, db):
+    sc.api_call(
+        "chat.postMessage",
+        as_user=True,
+        channel=mentor,
+        text=reply_text
+    )
+
+
+def remove_keywords(mentor, keywords, db, sc):
     db.collection('keyword')
 
     for keyword in keywords:
@@ -31,8 +43,45 @@ def remove_keywords(mentor, keywords, db):
         except NotFound as e:
             continue
 
+    reply_text = "I've removed keywords " + str(keywords) + " to you!"
 
-def print_help():
+    sc.api_call(
+        "chat.postMessage",
+        as_user=True,
+        channel=mentor,
+        text=reply_text
+    )
+
+
+def print_help(mentor, sc):
+
+    help_text = "Welcome to MentorWatch." \
+                "\n" \
+                "I'm a service that lets you subscribe to keywords posted in the mentoring channel" \
+                "and be notified if someone posts something that may apply to your areas of expertise or" \
+                "interest. You can let me know what to look out for through private messages with me," \
+                "and also remove words as well." \
+                "\n" \
+                "To add words, say" \
+                "\"add x1 x2 x3 ...\"" \
+                "Where x1, x2, and x3 are all space delimited keywords you would like me to watch out for." \
+                "\n" \
+                "To remove words, say" \
+                "\"remove x1 x2 x3 ...\"" \
+                "Where x1, x2, and x3 are all space delimited keywords you no longer want to hear from." \
+                "\n" \
+                "For all of these, you can have as many keywords you like, but for your own sanity it's " \
+                "recommended to exclude words like \"the\" to not get yourself spammed." \
+                "\n" \
+                "If you have any questions, dm jjkjiang on slack or email jjian014@ucr.edu"
+
+    sc.api_call(
+        "chat.postMessage",
+        as_user=True,
+        channel=mentor,
+        text=help_text
+    )
+
     return True
 
 
@@ -69,11 +118,11 @@ def receive_event(request):
         keywords = text[1:]
 
         if text[0].lower() == 'add':
-            add_keywords(user, keywords, db)
+            add_keywords(user, keywords, db, sc)
         elif text[0].lower() == 'remove':
-            remove_keywords(user, keywords, db)
+            remove_keywords(user, keywords, db, sc)
         elif text[0].lower() == 'help':
-            print_help()
+            print_help(user, sc)
 
 
     elif request_json['event']['channel_type'] == 'channel': # means
