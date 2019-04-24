@@ -11,6 +11,12 @@ from google.api_core.exceptions import NotFound
 # Individual bot actions
 # -----------------------------------------
 def add_keywords(mentor, keywords, db, sc):
+    """Adds mentor references to firestore, if first one then creates a new document
+    :param mentor: User ID of person who messaged bot
+    :param keywords: Keywords user wants to add in string array
+    :param db: Firestore client
+    :param sc: Slack client
+    """
     for keyword in keywords:
         entry = db.document('keyword', keyword)
 
@@ -30,6 +36,12 @@ def add_keywords(mentor, keywords, db, sc):
 
 
 def remove_keywords(mentor, keywords, db, sc):
+    """Removes mentor reference from firestore
+    :param mentor: User ID of person who messaged bot
+    :param keywords: Keywords user wants to remove in string array
+    :param db: Firestore client
+    :param sc: Slack client
+    """
     for keyword in keywords:
         entry = db.document('keyword', keyword)
 
@@ -49,6 +61,10 @@ def remove_keywords(mentor, keywords, db, sc):
 
 
 def print_help(mentor, sc):
+    """Prints help text defined within this function to messaging user
+    :param mentor: User ID of person who messaged bot
+    :param sc: Slack client
+    """
     help_text = "Welcome to MentorWatch." \
                 "\n" \
                 "I'm a service that lets you subscribe to keywords posted in the mentoring channel " \
@@ -78,6 +94,12 @@ def print_help(mentor, sc):
 
 
 def start_pings(text, permalink, db, sc):
+    """Checks a message for keywords and pings all subscribed mentors only ONCE per message
+    :param text: String list with message components
+    :param permalink: Link to original message
+    :param db: Firestore client
+    :param sc: Slack client
+    """
     informed_users = set()
 
     for word in text:
@@ -104,13 +126,9 @@ def start_pings(text, permalink, db, sc):
 # Main / cloud function handler
 # -----------------------------------------
 def receive_event(request):
-    """Responds to any HTTP request.
-    Args:
-        request (flask.Request): HTTP request object.
-    Returns:
-        The response text or any set of values that can be turned into a
-        Response object using
-        `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
+    """Receives HTTP event subscriptions from Slack
+    :param request: Flask request object
+    :return:
     """
 
     db = firestore.Client()
@@ -152,8 +170,11 @@ def receive_event(request):
 # Helper functions
 # -----------------------------------------
 
-
 def clean_text(text):
+    """Processes an array of strings to strip punctuation and capitalization
+    :param text: String array
+    :return: Cleaned string array with no punctuation and capitalization
+    """
     result_text = []
 
     for word in text:
