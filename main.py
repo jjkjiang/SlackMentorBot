@@ -119,7 +119,7 @@ def receive_event(request):
     request_json = request.get_json()
 
     text = request_json['event']['text'].split()
-    text = [word.lower() for word in text]
+    text = clean_text(text)
 
     user = request_json['event']['user']
 
@@ -146,6 +146,15 @@ def receive_event(request):
 # -----------------------------------------
 
 
-def grab_first_in_generator(gen):
-    for i in gen:
-        return i
+def clean_text(text):
+    result_text = []
+
+    for word in text:
+        # lowercase
+        word = word.lower()
+        # strip punctuation
+        word = word.replace('.', '').replace('!', '').replace('?', '')
+
+        result_text.append(word)
+
+    return result_text
