@@ -1,6 +1,8 @@
 from google.cloud import firestore
 from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 from google.api_core.exceptions import NotFound
+import os
+from slackclient import SlackClient
 
 
 # -----------------------------------------
@@ -34,7 +36,7 @@ def print_help():
     return True
 
 
-def reply(text, db):
+def start_pings(text, db):
     return True
 
 
@@ -52,6 +54,7 @@ def receive_event(request):
     """
 
     db = firestore.Client()
+    sc = SlackClient(os.environ["SLACK_API_TOKEN"])
 
     request_json = request.get_json()
 

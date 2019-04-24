@@ -1,2 +1,3 @@
 google-cloud-firestore>=0.32
 flask
+slackclient
