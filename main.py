@@ -12,7 +12,7 @@ def add_keywords(mentor, keywords, db):
         entry = db.document('keyword', keyword)
 
         snapshot = entry.get()
-        if snapshot.exists():
+        if snapshot:
             entry.update({'mentors': ArrayUnion([mentor])})
         else:
             entry.set({
