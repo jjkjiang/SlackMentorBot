@@ -1,5 +1,5 @@
 from google.cloud import firestore
-from google.cloud.firestore_v1beta1 import ArrayRemove, ArrayUnion
+from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 
 
 # -----------------------------------------
