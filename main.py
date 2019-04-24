@@ -57,17 +57,17 @@ def print_help(mentor, sc):
 
     help_text = "Welcome to MentorWatch." \
                 "\n" \
-                "I'm a service that lets you subscribe to keywords posted in the mentoring channel" \
-                "and be notified if someone posts something that may apply to your areas of expertise or" \
-                "interest. You can let me know what to look out for through private messages with me," \
+                "I'm a service that lets you subscribe to keywords posted in the mentoring channel " \
+                "and be notified if someone posts something that may apply to your areas of expertise or " \
+                "interest. You can let me know what to look out for through private messages with me, " \
                 "and also remove words as well." \
                 "\n" \
-                "To add words, say" \
-                "\"add x1 x2 x3 ...\"" \
+                "To add words, say\n" \
+                "\"add x1 x2 x3 ...\"\n" \
                 "Where x1, x2, and x3 are all space delimited keywords you would like me to watch out for." \
                 "\n" \
-                "To remove words, say" \
-                "\"remove x1 x2 x3 ...\"" \
+                "To remove words, say\n" \
+                "\"remove x1 x2 x3 ...\"\n" \
                 "Where x1, x2, and x3 are all space delimited keywords you no longer want to hear from." \
                 "\n" \
                 "For all of these, you can have as many keywords you like, but for your own sanity it's " \
