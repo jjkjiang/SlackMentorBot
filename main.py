@@ -147,6 +147,8 @@ def receive_event(request):
             channel=request_json['event']['channel'],
             ts=request_json['event']['ts'],
         )
+        
+        print(result)
 
         start_pings(text, result['permalink'], db, sc)
 
