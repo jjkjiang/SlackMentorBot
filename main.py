@@ -145,9 +145,10 @@ def receive_event(request):
         result = sc.api_call(
             "chat.getPermalink",
             channel=request_json['event']['channel'],
-            ts=request_json['event']['ts'],
+            ts=request_json['event']['event_ts'],
         )
-        
+
+        print(request_json)
         print(result)
 
         start_pings(text, result['permalink'], db, sc)
