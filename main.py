@@ -159,7 +159,11 @@ def clean_text(text):
         # lowercase
         word = word.lower()
         # strip punctuation
-        word = word.replace('.', '').replace('!', '').replace('?', '')
+        word = word.replace('.', '')\
+            .replace('!', '')\
+            .replace('?', '')\
+            .replace('\'', '')\
+            .replace('\"', '')
 
         result_text.append(word)
 
