@@ -11,8 +11,6 @@ from google.api_core.exceptions import NotFound
 # Individual bot actions
 # -----------------------------------------
 def add_keywords(mentor, keywords, db, sc):
-    db.collection('keyword')
-
     for keyword in keywords:
         entry = db.document('keyword', keyword)
 
@@ -32,8 +30,6 @@ def add_keywords(mentor, keywords, db, sc):
 
 
 def remove_keywords(mentor, keywords, db, sc):
-    db.collection('keyword')
-
     for keyword in keywords:
         entry = db.document('keyword', keyword)
 
@@ -82,12 +78,10 @@ def print_help(mentor, sc):
 
 
 def start_pings(text, user, db, sc):
-    db.collection('keyword')
-
     informed_users = set()
 
     for word in text:
-        result = db.document(word).get()
+        result = db.document('keyword', word).get()
 
         if result.exists:
             mentors = result.to_dict()['mentors']
