@@ -127,12 +127,13 @@ def receive_event(request):
         return request_json['challenge']
     elif request_json['event']['channel_type'] == 'im':  # means likely mentor communication
         keywords = text[1:]
+        command = text[0]
 
-        if text[0].lower() == 'add':
+        if command == 'add':
             add_keywords(user, keywords, db, sc)
-        elif text[0].lower() == 'remove':
+        elif command == 'remove':
             remove_keywords(user, keywords, db, sc)
-        elif text[0].lower() == 'help':
+        elif command == 'help':
             print_help(user, sc)
 
     elif request_json['event']['channel_type'] == 'channel': # means
