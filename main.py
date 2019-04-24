@@ -11,7 +11,7 @@ def add_keywords(mentor, keywords, db):
     for keyword in keywords:
         entry = db.document('keyword', keyword)
 
-        snapshot = grabFirstInGenerator(entry.get())
+        snapshot = entry.get()
         if snapshot.exists():
             entry.update({'mentors': ArrayUnion([mentor])})
         else:
@@ -65,7 +65,7 @@ def receive_event(request):
 # Helper functions
 # -----------------------------------------
 
-def grabFirstInGenerator(gen):
+
+def grab_first_in_generator(gen):
     for i in gen:
         return i
-
