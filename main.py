@@ -7,7 +7,6 @@ from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
 from google.api_core.exceptions import NotFound
 
 
-
 # -----------------------------------------
 # Individual bot actions
 # -----------------------------------------
@@ -54,7 +53,6 @@ def remove_keywords(mentor, keywords, db, sc):
 
 
 def print_help(mentor, sc):
-
     help_text = "Welcome to MentorWatch." \
                 "\n" \
                 "I'm a service that lets you subscribe to keywords posted in the mentoring channel " \
@@ -82,11 +80,30 @@ def print_help(mentor, sc):
         text=help_text
     )
 
-    return True
 
+def start_pings(text, permalink, db, sc):
+    db.collection('keyword')
 
-def start_pings(text, db):
-    return True
+    informed_users = set()
+
+    for word in text:
+        result = db.document(word).get()
+
+        if result.exists:
+            mentors = result.to_dict()['mentors']
+
+            for mentor in mentors:
+                if mentor in informed_users:
+                    continue
+
+                sc.api_call(
+                    "chat.postMessage",
+                    as_user=True,
+                    channel=mentor,
+                    text=permalink
+                )
+
+                informed_users.add(mentor)
 
 
 # -----------------------------------------
@@ -124,12 +141,18 @@ def receive_event(request):
         elif text[0].lower() == 'help':
             print_help(user, sc)
 
-
     elif request_json['event']['channel_type'] == 'channel': # means
-        keywords = text
-        #filler
+        result = sc.api_call(
+            "chat.getPermalink",
+            channel=request_json['event']['channel'],
+            ts=request_json['event']['ts'],
+        )
 
-    return "ok"
+        start_pings(text, result['permalink'], db, sc)
+
+    return ""
+
+
 # -----------------------------------------
 # Helper functions
 # -----------------------------------------
