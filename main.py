@@ -1,5 +1,6 @@
 from google.cloud import firestore
 from google.cloud.firestore_v1 import ArrayRemove, ArrayUnion
+from google.api_core.exceptions import NotFound
 
 
 # -----------------------------------------
@@ -11,14 +12,10 @@ def add_keywords(mentor, keywords, db):
     for keyword in keywords:
         entry = db.document('keyword', keyword)
 
-        snapshot = entry.get()
-        if snapshot:
+        try:
             entry.update({'mentors': ArrayUnion([mentor])})
-        else:
-            entry.set({
-                'mentors': mentor,
-            })
-
+        except NotFound e:
+            entry.set({'mentors': mentor})
 
 def remove_keywords(mentor, keywords, db):
     return True
