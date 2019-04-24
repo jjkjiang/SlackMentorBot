@@ -15,7 +15,7 @@ def add_keywords(mentor, keywords, db):
         try:
             entry.update({'mentors': ArrayUnion([mentor])})
         except NotFound as e:
-            entry.set({'mentors': mentor})
+            entry.set({'mentors': [mentor]})
 
 
 def remove_keywords(mentor, keywords, db):
