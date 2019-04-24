@@ -81,7 +81,7 @@ def print_help(mentor, sc):
     )
 
 
-def start_pings(text, permalink, db, sc):
+def start_pings(text, user, db, sc):
     db.collection('keyword')
 
     informed_users = set()
@@ -100,7 +100,7 @@ def start_pings(text, permalink, db, sc):
                     "chat.postMessage",
                     as_user=True,
                     channel=mentor,
-                    text=permalink
+                    text="<@" + user + "> might need your help! Check the mentor channel!"
                 )
 
                 informed_users.add(mentor)
@@ -121,6 +121,8 @@ def receive_event(request):
 
     db = firestore.Client()
     sc = SlackClient(os.environ["SLACK_API_TOKEN"])
+    # slack why
+    scRead = SlackClient(os.environ["SLACK_USER_TOKEN"])
 
     request_json = request.get_json()
 
@@ -142,16 +144,7 @@ def receive_event(request):
             print_help(user, sc)
 
     elif request_json['event']['channel_type'] == 'channel': # means
-        result = sc.api_call(
-            "chat.getPermalink",
-            channel=request_json['event']['channel'],
-            ts=request_json['event']['event_ts'],
-        )
-
-        print(request_json)
-        print(result)
-
-        start_pings(text, result['permalink'], db, sc)
+        start_pings(text, user, db, sc)
 
     return ""
 
