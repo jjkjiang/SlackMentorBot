@@ -121,8 +121,6 @@ def receive_event(request):
 
     db = firestore.Client()
     sc = SlackClient(os.environ["SLACK_API_TOKEN"])
-    # slack why
-    scRead = SlackClient(os.environ["SLACK_USER_TOKEN"])
 
     request_json = request.get_json()
 
