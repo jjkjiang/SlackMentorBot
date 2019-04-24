@@ -1,5 +1,5 @@
 # SlackMentorBot
-Quick and dirty example of slack bot running on GCP cloud functions to ping people on keywords
+Quick and dirty example of slack bot running on GCP Cloud Functions and Firestore to ping people on keywords
 
 # Starting on slack
 1. Add app to workspace using my private link
