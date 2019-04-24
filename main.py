@@ -144,8 +144,8 @@ def receive_event(request):
     if 'challenge' in request_json:
         return request_json['challenge']
     elif request_json['event']['channel_type'] == 'im':  # means likely mentor communication
-        keywords = text[1:]
         command = text[0]
+        keywords = text[1:]
 
         if command == 'add':
             add_keywords(user, keywords, db, sc)
