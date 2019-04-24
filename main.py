@@ -77,7 +77,7 @@ def print_help(mentor, sc):
     )
 
 
-def start_pings(text, user, db, sc):
+def start_pings(text, permalink, db, sc):
     informed_users = set()
 
     for word in text:
@@ -94,7 +94,7 @@ def start_pings(text, user, db, sc):
                     "chat.postMessage",
                     as_user=True,
                     channel=mentor,
-                    text="<@" + user + "> might need your help! Check the mentor channel!"
+                    text="This user might need your help: " + permalink,
                 )
 
                 informed_users.add(mentor)
@@ -136,7 +136,13 @@ def receive_event(request):
             print_help(user, sc)
 
     elif request_json['event']['channel_type'] == 'channel': # means
-        start_pings(text, user, db, sc)
+        result = sc.api_call(
+            "chat.getPermalink",
+            channel=request_json['event']['channel'],
+            message_ts=request_json['event']['ts'],
+        )
+
+        start_pings(text, result['permalink'], db, sc)
 
     return ""
 
