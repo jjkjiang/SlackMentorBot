@@ -131,9 +131,6 @@ def receive_event(request):
     :return:
     """
 
-    db = firestore.Client()
-    sc = SlackClient(os.environ["SLACK_API_TOKEN"])
-
     request_json = request.get_json()
 
     try:
@@ -142,6 +139,15 @@ def receive_event(request):
         return
 
     text = clean_text(text)
+
+    db = firestore.Client()
+
+    team_id = request_json['team_id']
+
+    ref = db.document('api_tokens', team_id).get()
+    token = ref.get('token')
+
+    sc = SlackClient(token)
 
     user = request_json['event']['user']
 
