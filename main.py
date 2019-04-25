@@ -136,7 +136,11 @@ def receive_event(request):
 
     request_json = request.get_json()
 
-    text = request_json['event']['text'].split()
+    try:
+        text = request_json['event']['text'].split()
+    except KeyError e: # No text
+        return
+
     text = clean_text(text)
 
     user = request_json['event']['user']
