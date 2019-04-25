@@ -135,7 +135,7 @@ def receive_event(request):
 
     try:
         text = request_json['event']['text'].split()
-    except KeyError e: # No text
+    except KeyError as e:  # No text
         return
 
     text = clean_text(text)
