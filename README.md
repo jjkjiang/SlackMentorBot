@@ -11,7 +11,7 @@ Due to the slack events API's retry behavior, not replying within 3 seconds mean
 
 With cold starts, this can cause issues due to the delay involved in starting a new instance. See https://mikhail.io/2018/08/serverless-cold-start-war/ for why this problem is potentially worse on GCP in particular.
 
-This could be fixed easily if it was not on a FaaS, ironically, as being able to return a response without stopping execution means threads would likely die before they finish. This could be fixed by forwarding the slack request to another function and having the function that simply listens for slack return a 200 response immediately, but that would make this a bit too complex.
+One fix if this were not on a FaaS would be to simply use threading to do the work in the background while the main handler returns a 200 response to slack. On a FaaS could be fixed by forwarding the slack request to another function and having the function that simply listens for slack return a 200 response immediately, but that would make this a bit too complex for a quick hack so I'll just leave this acknowledgement here.
 
 The database updates themselves are idempotent, there can be a rare case where issues happen if two instances of this are setting the same new word for two people at once and both enter the section where the update fails because there is no existing record, so both individually set their own one ID arrays into the document. To fix this, I would likely have to add transactions to the individual parts documented here: 
 https://firebase.google.com/docs/firestore/manage-data/transactions#transactions
